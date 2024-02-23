@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!-- Google tag (gtag.js) -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-N0LG27M8L8"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+
+      gtag("config", "G-N0LG27M8L8");
+    </script>
+    <title>Eaglercraft</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/assets/css/style.css" />
+    <link rel="stylesheet" href="/assets/css/nav.css" />
+    <link rel="stylesheet" href="css.css" />
+    <link rel="icon" type="image/x-icon" href="/img/canvas.ico" />
+    <script src="/assets/js/font.js"></script>
+
+    <script>
+      function updateOptions() {
+        var versionSelect = document.getElementById("versionSelect");
+        var option = versionSelect.options[versionSelect.selectedIndex].value;
+
+        var addonSelect = document.getElementById("addonSelect");
+        if (option === "1.8.8") {
+          addonSelect.innerHTML =
+            '<option value="uwu">UwU Client</option><option value="dragonx">DragonX</option><option value="pi">Pi Client</option><option value="kone">Kone Client</option>';
+        } else if (option === "1.5.2") {
+          addonSelect.innerHTML = '<option value="fushax">FushaX</option>';
+        } else {
+          addonSelect.innerHTML = "";
+        }
+      }
+
+      function launchLink() {
+        var versionSelect = document.getElementById("versionSelect");
+        var addonSelect = document.getElementById("addonSelect");
+
+        var version = versionSelect.options[versionSelect.selectedIndex].value;
+        var addon = addonSelect.options[addonSelect.selectedIndex].value;
+
+        var link = "/misc/11eaglercraft/" + version + "/" + addon + ".html";
+        window.location.href = link;
+      }
+    </script>
+  </head>
+
+  <body>
+    <nav>
+      <a href="/">
+        <h2>Reds Exploit Corner</h2>
+      </a>
+      <ul>
+        <li><a href="/art.html">Games</a></li>
+        <li><a href="/apps.html">Apps</a></li>
+        <li><a href="/math.html">Exploits</a></li>
+        <li><a href="/science.html">Search</a></li>
+        <li><a href="/english.html">AI</a></li>
+
+        <li>
+          <a href="/settings.html"><i class="fa-solid fa-gear fa-lg"></i></a>
+        </li>
+      </ul>
+    </nav>
+    <br />
+    <br />
+
+    <h1 style="text-align: center">Eaglercraft Hacks</h1>
+    <h4><center>Warning: I am not responsible if you get banned.</center></h4>
+    <main>
+      <label for="versionSelect">Version:</label>
+      <select id="versionSelect" onchange="updateOptions()">
+        <option value="Select">Select a Version</option>
+        <option value="1.5.2">1.5.2</option>
+        <option value="1.8.8">1.8.8</option>
+      </select>
+      <br /><br />
+      <label for="addonSelect">Client:</label>
+      <select id="addonSelect"></select>
+      <br /><br />
+      <button onclick="launchLink()">Launch</button>
+    </main>
+    <script src="/assets/js/script.js"></script>
+  </body>
+</html>
