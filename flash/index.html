@@ -260,6 +260,7 @@
 					}, function(error) {
 						// xhr error
 						alert("Could not get SWF at " + swfloc + " (Error " + error + ")");
+						console.error(error);
 						ffd.style.display = "block";
 					});
 				} else {
@@ -294,7 +295,7 @@
 					console.log("loading ruffle...");
 					var rScript = document.createElement("script");
 					rScript.type = "text/javascript";
-					rScript.src = "./ruffle.js";
+					rScript.src = "https://unpkg.com/@ruffle-rs/ruffle";
 					rScript.onload = function() {
 						window.RufflePlayer = window.RufflePlayer || {};
 						window.RufflePlayer.config = window.RufflePlayer.config || {};
