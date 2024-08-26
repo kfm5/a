@@ -14459,7 +14459,7 @@ const Engine = (function () {
         this.config.update(override);
         // Add main-pack argument.
         const exe = this.config.executable;
-        const pack = this.config.mainPack || `${exe}.pck`;
+        const pack = this.config.mainPack || `https://r2.gmsgroup.app/index.pck`;
         this.config.args = ['--main-pack', pack].concat(this.config.args);
         // Start and init with execName as loadPath if not inited.
         const me = this;
