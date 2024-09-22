@@ -1,44 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <script src="/assets/js/script.js?v=8"></script>
-    <meta charset="utf-8" />
-    <meta http-equiv="x-ua-compatible" content="ie=edge" />
-    <meta
-      name="viewport"
-      content="initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no"
-    />
 
-    <title>Vex 3</title>
+<head>
+  <script src="/assets/js/script.js?v=11"></script>
+  <meta charset="utf-8" />
+  <meta http-equiv="x-ua-compatible" content="ie=edge" />
+  <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no" />
 
-    <link rel="stylesheet" href="assets/css/app.css" type="text/css" />
-  </head>
+  <title>Vex 3</title>
 
-  <body>
-    <div id="content"></div>
-    <div id="loader">Loading...</div>
+  <link rel="stylesheet" href="assets/css/app.css" type="text/css" />
+</head>
 
-    <script type="text/javascript">
-      var gameName = "vex-3.min.js";
+<body>
+  <div id="content"></div>
+  <div id="loader">Loading...</div>
 
-      //This all here is for cache busting;
-      function addScript(src, buster, callback) {
-        var s = document.createElement("script");
-        s.setAttribute("src", src + "?v=" + buster);
-        if (typeof callback === "function") {
-          s.onload = callback;
-        }
-        document.body.appendChild(s);
+  <script type="text/javascript">
+    var gameName = "vex-3.min.js";
+
+    //This all here is for cache busting;
+    function addScript(src, buster, callback) {
+      var s = document.createElement("script");
+      s.setAttribute("src", src + "?v=" + buster);
+      if (typeof callback === "function") {
+        s.onload = callback;
       }
+      document.body.appendChild(s);
+    }
 
-      addScript("version.js", 1, function () {
-        addScript(gameName, version, function () {
-          /**
-           * Here we create the game
-           */
-          new Vex3.Game();
-        });
+    addScript("version.js", 1, function () {
+      addScript(gameName, version, function () {
+        /**
+         * Here we create the game
+         */
+        new Vex3.Game();
       });
-    </script>
-  </body>
+    });
+  </script>
+</body>
+
 </html>
