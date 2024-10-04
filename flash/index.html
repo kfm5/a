@@ -2,7 +2,7 @@
 <html>
 
 <head>
-  <script src="/assets/js/script.js?v=11"></script>
+  <script src="https://unpkg.com/@ruffle-rs/ruffle"></script>
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-N0LG27M8L8"></script>
   <script>
@@ -171,20 +171,22 @@
       queries[p[0]] = p[1];
     }
 
-    // xhr
+    // xhr using fetch
     function grab(url, type, success, fail) {
-      var req = new XMLHttpRequest();
-      req.open("GET", url, true);
-      req.overrideMimeType("text/plain; charset=x-user-defined");
-      req.responseType = type;
-      req.onload = function () {
-        if (req.status >= "400") {
-          fail(req.status);
-        } else {
-          success(this.response);
-        }
-      };
-      req.send();
+      fetch(url)
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          return response.arrayBuffer();
+        })
+        .then((data) => {
+          success(data);
+        })
+        .catch((error) => {
+          fail(error);
+          console.error("Failed to fetch SWF file:", error);
+        });
     }
 
     // file reader
@@ -214,10 +216,21 @@
         flashObject.appendChild(flashObjectWmode);
         mainarea.appendChild(flashObject);
       } else {
-        // hide the custom context menu for now, but allow it to be shown
-        rplayer.contextMenuElement.style.display = "none";
-        rplayer.contextMenuElement.style.zIndex = "auto";
+        if (!rplayer) {
+          console.error("Ruffle player is not initialized!");
+          return;
+        }
 
+        // Safeguard for contextMenuElement
+        if (rplayer.contextMenuElement && rplayer.contextMenuElement.style) {
+          // Hide the custom context menu for now, but allow it to be shown later
+          rplayer.contextMenuElement.style.display = "none";
+          rplayer.contextMenuElement.style.zIndex = "auto";
+        } else {
+          console.warn("Context menu element is undefined or missing style. Skipping context menu setup.");
+        }
+
+        // Load the SWF data into Ruffle
         rplayer.load({ data: data });
       }
     }
@@ -255,95 +268,57 @@
         var swfloc = /^(http:\/\/|https:\/\/|\/\/)/i.test(queries.swf)
           ? queries.swf
           : cdn + queries.swf;
-        console.log("Fetching SWF from " + swfloc + "...");
         grab(
           swfloc,
           "arraybuffer",
           function (data) {
-            // start
             console.log("Succesfully fetched SWF from " + swfloc);
             startPlayer(data);
           },
           function (error) {
-            // xhr error
-            alert(
-              "Could not get SWF at " + swfloc + " (Error " + error + ")"
-            );
-            console.error(error);
             ffd.style.display = "block";
+            console.error("Failed to fetch SWF file.", error);
           }
         );
       } else {
-        // prompt user to upload a file
         ffd.style.display = "block";
       }
     }
 
-    window.addEventListener(
-      "load",
-      function () {
-        mainarea = document.getElementById("mainarea");
-        ffd = document.getElementById("ffd");
-        upload = document.getElementById("upload");
-        legacy = document.getElementById("legacy");
-        useLegacy = !!localStorage.getItem("useFlashObject");
+    window.onload = function () {
+      mainarea = document.querySelector(".main");
+      ffd = document.getElementById("ffd");
+      upload = document.getElementById("upload");
+      legacy = document.getElementById("legacy");
+      rplayer = window.RufflePlayer
+        ? window.RufflePlayer.newest().createPlayer()
+        : undefined;
 
-        if (useLegacy) legacy.checked = true;
+      // Embed ruffle player
+      if (rplayer) {
+        rplayer.classList.add("gembed");
+        mainarea.appendChild(rplayer);
+        console.log("Ruffle is loaded and initialized!");
+      } else {
+        console.log("Flash player object will be used instead.");
+      }
 
-        legacy.onclick = function () {
-          if (this.checked) {
-            localStorage.setItem("useFlashObject", "true");
-          } else {
-            localStorage.removeItem("useFlashObject");
-          }
-          if (confirm("Reloading for changes to take effect"))
-            location.reload();
-        };
+      useLegacy = legacy ? legacy.checked : false;
 
-        if (useLegacy) {
-          console.log("skipping ruffle load, using flash object...");
-          readyForLoad();
-        } else {
-          // make ruffle player
-          console.log("loading ruffle...");
-          var rScript = document.createElement("script");
-          rScript.type = "text/javascript";
-          rScript.src = "https://unpkg.com/@ruffle-rs/ruffle";
-          rScript.onload = function () {
-            window.RufflePlayer = window.RufflePlayer || {};
-            window.RufflePlayer.config = window.RufflePlayer.config || {};
-            window.RufflePlayer.config.letterbox = "on";
-            window.RufflePlayer.config.autoplay = "auto";
-            const rufflei = window.RufflePlayer.newest();
-            rplayer = rufflei.createPlayer();
-            rplayer.classList.add("gembed");
-            rplayer.style.zIndex = "1";
-            mainarea.appendChild(rplayer);
-            console.log("ruffle is loaded");
-
-            readyForLoad();
-          };
-          document.body.appendChild(rScript);
-        }
-      },
-      false
-    );
+      readyForLoad();
+    };
   </script>
 </head>
 
-<div class="main" id="mainarea">
-  <ul id="menu">
-    <li title="Try to use the flash plugin (only available in browsers that still support it)">
-      <input type="checkbox" id="legacy" />Use flash object
-    </li>
-  </ul>
-  <div id="ffd" style="display: none">
-    <h2>Flash Player Emulator</h2>
-    <input type="file" id="upload" accept=".swf, .spl" />
-    <label for="upload">Choose File</label>
-    <a href="https://ruffle.rs" target="_blank" class="source">Source</a>
+<body>
+  <div class="main"></div>
+  <div id="ffd" style="display:none;">
+    <input id="upload" type="file" accept=".swf" />
+    <label for="upload">Click to open SWF file</label>
+    <div>
+      Or Drag and Drop file here
+    </div>
   </div>
-</div>
 </body>
 
 </html>
