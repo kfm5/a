@@ -621,11 +621,7 @@ setInterval(function () {
 
     var sid = "vqpdso5mdr0n80kkknmkbi3ntg";
     function updateStatus(fromEvent = false) {
-      const req = new XMLHttpRequest();
-      var aStr = "recordsession.php?s=" + sid;
-      if (fromEvent == true) aStr = aStr + "&e=1";
-      req.open("GET", aStr);
-      req.send();
+
     }
     function SendEvent(theEvent, theAction) {
       gtag(theEvent, theAction);

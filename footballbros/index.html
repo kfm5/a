@@ -984,19 +984,9 @@
 
         var sid = 'rompdvj917i3jv4tqo92jogiqk'
         function updateStatus(fromEvent = false) {
-            const req = new XMLHttpRequest();
-            var aStr = "recordsession.php?s=" + sid;
-            if (fromEvent == true) aStr = aStr + "&e=1"
-            req.open("GET", aStr);
-            req.send();
+
         }
         function SendEvent(theEvent, theAction, theParms = '') {
-            if (theParms == '') {
-                gtag(theEvent, theAction);
-            } else {
-                gtag(theEvent, theAction, theParms);
-            }
-            updateStatus(true);
             //console.log("Sending event: " + theEvent + "/" + theAction + "/" + theParms);
         }
         //setInterval(function() { updateStatus, 4*60*1000);			
